@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #071417;
+  --sea: #0e3a42;
+  --tide: #1a5c66;
+  --foam: #edf4f5;
+  --mist: #d7e6e8;
+  --brass: #b8924a;
+  --brass-soft: #d4b87a;
+  --stone: #5c6b6e;
+  --white: #ffffff;
+  --background: var(--foam);
+  --foreground: var(--ink);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--brass);
+  color: var(--ink);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.hero-gradient {
+  background:
+    linear-gradient(120deg, rgba(7, 20, 23, 0.78) 0%, rgba(14, 58, 66, 0.55) 45%, rgba(7, 20, 23, 0.35) 100%),
+    linear-gradient(to top, rgba(7, 20, 23, 0.85), transparent 45%);
+}
+
+.section-pad {
+  @apply px-5 md:px-10 lg:px-16 py-20 md:py-28;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 bg-[var(--brass)] text-[var(--ink)] px-7 py-3.5 text-sm font-semibold tracking-wide transition hover:bg-[var(--brass-soft)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brass)];
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 border border-white/40 text-white px-7 py-3.5 text-sm font-semibold tracking-wide transition hover:bg-white/10;
+}
+
+.input-field {
+  @apply w-full border-0 border-b border-[var(--mist)] bg-transparent px-0 py-3 text-[var(--ink)] focus:border-[var(--brass)] focus:outline-none focus:ring-0;
+}
+
+.input-field::placeholder {
+  color: color-mix(in srgb, var(--stone) 70%, transparent);
+}
+
+.admin-input {
+  @apply w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--tide)] focus:ring-1 focus:ring-[var(--tide)];
+}
+/* =========================================================
+   RESPONSIVE BASE
+   ========================================================= */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 320px;
+}
+
+/* Prevent media from overflowing */
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+/* Keep form controls inside viewport */
+input,
+textarea,
+select,
+button {
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 1280px) {
+  .section-pad {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+
+/* =========================================================
+   LAPTOP
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .section-pad {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .section-pad {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .section-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    min-height: 46px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .section-pad {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    width: 100%;
+  }
+}

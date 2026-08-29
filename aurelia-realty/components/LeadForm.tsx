@@ -1,0 +1,7 @@
+'use client';
+import {useState} from 'react'; import {apiJson} from '@/lib/api';
+export default function LeadForm({propertyId}:{propertyId?:string}){
+ const [busy,setBusy]=useState(false); const [msg,setMsg]=useState('');
+ async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setMsg('');const form=e.currentTarget;const data=Object.fromEntries(new FormData(form));try{await apiJson('/api/leads',{method:'POST',body:JSON.stringify({...data,propertyId})});setMsg(`Thanks ${String(data.name)}. Your enquiry has been recorded.`);form.reset()}catch(err){setMsg(err instanceof Error?err.message:'Something went wrong.')}finally{setBusy(false)}}
+ return <form onSubmit={submit} className="adminform"><div className="grid" style={{gridTemplateColumns:'1fr 1fr'}}><input name="name" placeholder="Your name*" minLength={2} required/><input name="phone" placeholder="Mobile number*" required/></div><input name="email" type="email" placeholder="Email" style={{marginTop:10}}/><div className="grid" style={{gridTemplateColumns:'1fr 1fr',marginTop:10}}><select name="transactionType" defaultValue="SALE"><option value="SALE">Buy</option><option value="RENT">Rent</option></select><input name="preferredLocation" placeholder="Preferred location"/></div><textarea name="notes" placeholder="Tell us what you are looking for" style={{marginTop:10}}/><button className="btn gold" disabled={busy}>{busy?'Sending…':'Send enquiry'}</button>{msg&&<p className={msg.startsWith('Thanks')?'toast':'error'}>{msg}</p>}</form>
+}

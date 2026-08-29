@@ -1,0 +1,1 @@
+export default function Header(){return <header className="nav"><div className="container navin"><a className="brand" href="/">AURELIA REALTY</a><nav className="links"><a href="/properties">Properties</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/admin">Admin</a></nav></div></header>}

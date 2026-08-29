@@ -1,0 +1,14 @@
+'use client';
+import {useEffect,useState} from 'react';
+import Link from 'next/link';
+import Header from '@/components/Header'; import Footer from '@/components/Footer'; import {apiJson} from '@/lib/api';
+
+type Property={id:string;slug:string;title:string;propertyType:string;transactionType:string;price:number|string;city:string;locality:string;images:string[]};
+export default function Home(){
+ const [properties,setProperties]=useState<Property[]>([]);
+ useEffect(()=>{apiJson<Property[]>('/api/properties?published=true').then(setProperties).catch(console.error)},[]);
+ return <><Header/><section className="hero"><div className="container" style={{paddingBottom:70}}><div className="eyebrow">Premium real estate · Mumbai</div><h1 className="serif">Spaces that inspire. Places that endure.</h1><p>Discover thoughtfully planned residential and commercial properties with a direct path from enquiry to expert assistance.</p><form className="searchbar" action="/properties"><input name="q" placeholder="Search locality or project"/><select name="transaction"><option value="SALE">Buy</option><option value="RENT">Rent</option></select><select name="type"><option value="">Property type</option><option>Apartment</option><option>Commercial</option></select><button className="btn gold">Explore</button></form></div></section>
+ <section className="section"><div className="container"><div className="eyebrow">Featured portfolio</div><h2 className="serif" style={{fontSize:48}}>Selected properties</h2><div className="grid cards">{properties.slice(0,3).map(p=><Link key={p.id} href={`/properties/${p.slug}`} style={{textDecoration:'none',color:'inherit'}}><article className="property-card"><img src={p.images?.[0]} alt={p.title}/><div className="property-body"><span className="tag">{p.transactionType} · {p.propertyType}</span><h3>{p.title}</h3><p className="muted">{p.locality}, {p.city}</p><div className="price">₹ {Number(p.price).toLocaleString('en-IN')}</div></div></article></Link>)}</div></div></section>
+ <section className="section dark"><div className="container split"><div><div className="eyebrow">Built around people</div><h2 className="serif" style={{fontSize:48}}>From first enquiry to final handover.</h2></div><p className="muted" style={{fontSize:18,lineHeight:1.8}}>Every enquiry is stored, assigned and followed up by the team. No lead disappears into an inbox.</p></div></section>
+ <section className="section"><div className="container split"><div><div className="eyebrow">Why Aurelia</div><h2 className="serif" style={{fontSize:44}}>Architecture, quality and customer-first service.</h2><p className="muted">A modern real estate experience with an independently built CRM backend.</p></div><div><Link className="btn" href="/contact">Talk to our team</Link></div></div></section><Footer/></>
+}
