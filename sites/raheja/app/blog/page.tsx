@@ -1,2 +1,0 @@
-import Link from "next/link"; import {prisma} from "@/lib/prisma";
-export default async function Blog(){const posts=await prisma.blogPost.findMany({where:{published:true},orderBy:{createdAt:"desc"}});return <main className="section"><div className="container"><div className="eyebrow">Insights</div><h2>Journal</h2><div className="grid">{posts.map(p=><Link className="card" href={`/blog/${p.slug}`} key={p.id}><div className="cardbody"><div className="eyebrow">Real estate</div><h3>{p.title}</h3><p className="meta">{p.excerpt}</p></div></Link>)}</div></div></main>}
