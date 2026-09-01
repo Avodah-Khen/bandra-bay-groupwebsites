@@ -1,0 +1,2 @@
+import {notFound} from "next/navigation"; import {prisma} from "@/lib/prisma";
+export default async function Post({params}:{params:Promise<{slug:string}>}){const p=await prisma.blogPost.findUnique({where:{slug:(await params).slug}});if(!p||!p.published)return notFound();return <main className="section"><article className="container" style={{maxWidth:850}}><div className="eyebrow">RahejaSpaces Journal</div><h2>{p.title}</h2><p className="meta">{p.excerpt}</p><div style={{whiteSpace:"pre-wrap",lineHeight:1.9,fontSize:17}}>{p.content}</div></article></main>}
