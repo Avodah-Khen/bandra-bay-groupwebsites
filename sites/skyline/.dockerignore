@@ -1,9 +1,0 @@
-node_modules
-.next
-out
-*.db
-.env
-.env.local
-.git
-tests
-docs
