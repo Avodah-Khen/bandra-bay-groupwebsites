@@ -1,0 +1,3 @@
+import Image from 'next/image';
+export type FeatureData={id:string;title:string;description:string;imageUrl?:string|null};
+export default function FeatureHighlights({features}:{features:FeatureData[]}){if(!features.length)return null;return <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{features.map(f=><div key={f.id} className="card overflow-hidden">{f.imageUrl&&<div className="relative aspect-[16/8]"><Image src={f.imageUrl} alt={f.title} fill sizes="(max-width:1024px) 50vw, 33vw" className="object-cover"/></div>}<div className="border-l-2 border-gold p-4"><p className="font-display text-lg font-semibold">{f.title}</p><p className="mt-1 text-sm text-ink/70">{f.description}</p></div></div>)}</div>}
