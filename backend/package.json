@@ -1,0 +1,38 @@
+{
+  "name": "unified-real-estate-crm-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:setup": "prisma generate && prisma db push && tsx prisma/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "prisma migrate deploy",
+    "db:prepare": "prisma generate && prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "googleapis": "^148.0.0",
+    "jose": "^6.1.0",
+    "zod": "^4.4.3",
+    "firebase-admin": "^13.5.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.5",
+    "@types/node": "^22.15.21",
+    "prisma": "6.19.3",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

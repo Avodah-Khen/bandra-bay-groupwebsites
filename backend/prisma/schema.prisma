@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Site {
+  id             String             @id @default(cuid())
+  key            String             @unique
+  name           String
+  domain         String?
+  active         Boolean            @default(true)
+  logoUrl        String?
+  primaryColor   String?
+  secondaryColor String?
+  fontFamily     String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  audits         AuditLog[]
+  blogs          Blog[]
+  sheet          GoogleSheetConfig?
+  leads          Lead[]
+  content        SiteContent[]
+  access         UserSiteAccess[]
+}
+
+model User {
+  id                   String           @id @default(cuid())
+  name                 String
+  email                String           @unique
+  firebaseUid          String?          @unique
+  passwordHash         String
+  role                 Role             @default(SALES_AGENT)
+  active               Boolean          @default(true)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  auditLogs            AuditLog[]
+  updatedGlobalContent GlobalContent[]  @relation("GlobalContentUpdatedBy")
+  assignedLeads        Lead[]           @relation("LeadAssignee")
+  updatedSiteContent   SiteContent[]    @relation("SiteContentUpdatedBy")
+  siteAccess           UserSiteAccess[]
+}
+
+model UserSiteAccess {
+  userId    String
+  siteId    String
+  createdAt DateTime @default(now())
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, siteId])
+}
+
+model Lead {
+  id                  String     @id @default(cuid())
+  siteId              String
+  name                String
+  email               String?
+  phone               String
+  message             String?
+  source              LeadSource @default(WEBSITE)
+  status              LeadStatus @default(NEW)
+  priority            Priority   @default(MEDIUM)
+  notes               String?
+  propertyId          String?
+  propertyName        String?
+  assignedToId        String?
+  googleSheetSyncedAt DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  assignedTo          User?      @relation("LeadAssignee", fields: [assignedToId], references: [id])
+  site                Site       @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, createdAt])
+  @@index([siteId, status])
+  @@index([phone])
+  @@index([email])
+}
+
+model SiteContent {
+  id          String   @id @default(cuid())
+  siteId      String
+  key         String
+  value       Json
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  updatedBy   User?    @relation("SiteContentUpdatedBy", fields: [updatedById], references: [id])
+
+  @@unique([siteId, key])
+}
+
+model GlobalContent {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   User?    @relation("GlobalContentUpdatedBy", fields: [updatedById], references: [id])
+}
+
+model Blog {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  excerpt    String?
+  content    String
+  coverImage String?
+  published  Boolean  @default(false)
+  global     Boolean  @default(true)
+  siteId     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  site       Site?    @relation(fields: [siteId], references: [id])
+
+  @@index([published, global])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  siteId    String?
+  scope     Scope
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  site      Site?    @relation(fields: [siteId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([siteId, createdAt])
+}
+
+model GoogleSheetConfig {
+  id            String   @id @default(cuid())
+  siteId        String   @unique
+  spreadsheetId String
+  sheetName     String   @default("Leads")
+  enabled       Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
+  site          Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  SALES_MANAGER
+  SALES_AGENT
+  CONTENT_MANAGER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  SITE_VISIT
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum LeadSource {
+  WEBSITE
+  GOOGLE
+  META
+  WHATSAPP
+  PHONE
+  REFERRAL
+  WALK_IN
+  OTHER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Scope {
+  SITE
+  GLOBAL
+}

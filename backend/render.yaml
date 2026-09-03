@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: unified-real-estate-crm-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    preDeployCommand: ./node_modules/.bin/prisma migrate deploy
+    autoDeploy: true
